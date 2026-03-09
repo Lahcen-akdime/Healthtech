@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PatientRequest;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
@@ -16,33 +17,18 @@ class PatientController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PatientRequest $request)
     {
-        //
+        $formdata = $request->validated();
+        Patient::create($formdata);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Patient $Patient)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Patient $Patient)
+    public function show(string $id)
     {
         //
     }
@@ -50,7 +36,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Patient $Patient)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +44,7 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $Patient)
+    public function destroy(string $id)
     {
         //
     }
