@@ -13,7 +13,8 @@ class PatientController extends Controller
      */
     public function index()
     {
-        //
+    $data = Patient::all() ;
+    return response()->json($data, 200) ;
     }
 
     /**
@@ -36,7 +37,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PatientRequest $request, string $id)
     {
         //
     }
