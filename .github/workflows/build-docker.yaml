@@ -60,21 +60,21 @@ jobs:
         php artisan test
 
     # Job جديد باش نتيستيو واش GitHub Actions كيقدر يوصل للسيرفر
-    test-ssh-connection:
-      runs-on: ubuntu-latest
-      # هاد الـ Job غادي يتسنى حتى يساليو التستات ديال Laravel بنجاح
-      needs: laravel-tests 
-  
-      steps:
-        - name: Testing SSH Connection
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: 16.171.235.84
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_KEY }}
-            port: 22
-            script: |
-              echo "🚀 Connection Successful!"
-              whoami
-              uptime
-              ls -la /var/www/html
+      test-ssh-connection:
+        runs-on: ubuntu-latest
+        # هاد الـ Job غادي يتسنى حتى يساليو التستات ديال Laravel بنجاح
+        needs: laravel-tests 
+    
+        steps:
+          - name: Testing SSH Connection
+            uses: appleboy/ssh-action@v1.0.3
+            with:
+              host: 16.171.235.84
+              username: ubuntu
+              key: ${{ secrets.EC2_SSH_KEY }}
+              port: 22
+              script: |
+                echo "🚀 Connection Successful!"
+                whoami
+                uptime
+                ls -la /var/www/html
