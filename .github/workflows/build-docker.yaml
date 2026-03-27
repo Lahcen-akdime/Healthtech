@@ -1,18 +1,60 @@
-name: Build 
+name: Laravel CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ dev ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-
-  build:
-
+  laravel-tests:
     runs-on: ubuntu-latest
 
+    services:
+      # Correspondance avec ton service postgres_db
+      postgres_db:
+        image: postgres:16
+        env:
+          POSTGRES_DB: healthtech
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: lahcen2025
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Ajusté pour Laravel récent, à modifier selon ton besoin
+        extensions: mbstring, pdo_pgsql, bcmath, gd, zip
+        coverage: none
+
+    - name: Install Composer dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist
+
+    - name: Prepare environment
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+
+    - name: Run Migrations and Tests
+      env:
+        # On utilise 'localhost' car GitHub Actions exécute les steps sur l'hôte
+        # qui a accès au port mappé du service PostgreSQL (5432:5432)
+        DB_CONNECTION: pgsql
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_DATABASE: healthtech
+        DB_USERNAME: postgres
+        DB_PASSWORD: lahcen2025
+      run: |
+        php artisan migrate --force
+        php artisan test
