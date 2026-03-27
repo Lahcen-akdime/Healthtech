@@ -51,7 +51,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd healthtech-app || git clone -b dev https://github.com/${{ github.repository }}.git healthtech-app
+            if [ ! -d "healthtech-app" ]; then
+            git clone -b dev https://github.com/${{ github.repository }}.git healthtech-app
+            fi
             cd healthtech-app
             git pull origin dev
             docker compose down
