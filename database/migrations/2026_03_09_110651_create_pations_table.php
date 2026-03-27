@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->text('description');
-            $table->integer('patient_id');
-            $table->string('dossier_medical_id');
+            $table->integer('age');
+            $table->string('ville');
+            $table->string('maladie');
         });
     }
 

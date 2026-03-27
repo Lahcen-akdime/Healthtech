@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Patient;
+use App\Models\Traitement;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,12 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    Patient::create(
+    Traitement::create(
         [
-            'name' => 'Ahmed',
-            'age' => 30,
-            'ville' => 'Rabat' ,
-            'maladie' => 'Deprission'
+            'name' => 'Consultation',
+            'description' => 'test_générale',
+            'doctorName' => 'ahmed'
         ]
     );
     }
