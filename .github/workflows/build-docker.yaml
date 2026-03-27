@@ -1,16 +1,13 @@
-name: Laravel CI
+name: Laravel CI/CD & Auto PR
 
 on:
   push:
     branches: [ dev ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  # Job 1: الاختبارات
+  # --- JOB 1: CI (Tests) ---
   laravel-tests:
     runs-on: ubuntu-latest
-
     services:
       postgres_db:
         image: postgres:16
@@ -18,34 +15,19 @@ jobs:
           POSTGRES_DB: healthtech
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: lahcen2025
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+        ports: [ 5432:5432 ]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
           extensions: mbstring, pdo_pgsql, bcmath, gd, zip
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist
-
-      - name: Prepare environment
-        run: |
+      - run: composer install --no-progress --no-suggest --prefer-dist
+      - run: |
           cp .env.example .env
           php artisan key:generate
-
-      - name: Run Migrations and Tests
+      - name: Run Tests
         env:
           DB_CONNECTION: pgsql
           DB_HOST: localhost
@@ -57,20 +39,38 @@ jobs:
           php artisan migrate --force
           php artisan test
 
-  # Job 2: اختبار الاتصال (لاحظ أنه يبدأ من أقصى اليسار مثل الجوب الأول)
-  test-ssh-connection:
+  # --- JOB 2: CD (Deploy to EC2) ---
+  deploy:
     runs-on: ubuntu-latest
-    needs: laravel-tests 
+    needs: laravel-tests
     steps:
-      - name: Testing SSH Connection
+      - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 16.171.235.84
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
           script: |
-            echo "🚀 Connection Successful!"
-            whoami
-            uptime
-            ls -la /var/www/html
+            cd healthtech-app || git clone -b dev https://github.com/${{ github.repository }}.git healthtech-app
+            cd healthtech-app
+            git pull origin dev
+            docker compose down
+            docker compose up -d --build
+            docker image prune -f
+
+  # --- JOB 3: Auto Create PR (Dev to Main) ---
+  create-pull-request:
+    runs-on: ubuntu-latest
+    needs: deploy # ما كيدير PR حتى كيدوز الـ Deploy بنجاح
+    permissions:
+      pull-requests: write # ضروري باش GitHub يقدر يكتب PR
+      contents: read
+    steps:
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "main" # الفرع الهدف
+          source_branch: "dev"       # الفرع المصدر
+          pr_title: "🚀 Auto-PR: Merge Dev into Main (Success Deploy)"
+          pr_body: "Automated PR created by GitHub Actions after successful CI/CD on dev branch."
+          github_token: ${{ secrets.GITHUB_TOKEN }} # هاد السيكريت كاين ديجا فـ GitHub بلا ما تزيدو
