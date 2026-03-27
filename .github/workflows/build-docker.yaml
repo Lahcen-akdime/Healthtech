@@ -7,11 +7,11 @@ on:
     branches: [ main ]
 
 jobs:
+  # Job 1: الاختبارات
   laravel-tests:
     runs-on: ubuntu-latest
 
     services:
-      # Correspondance avec ton service postgres_db
       postgres_db:
         image: postgres:16
         env:
@@ -27,54 +27,50 @@ jobs:
           --health-retries 5
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2' # Ajusté pour Laravel récent, à modifier selon ton besoin
-        extensions: mbstring, pdo_pgsql, bcmath, gd, zip
-        coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_pgsql, bcmath, gd, zip
+          coverage: none
 
-    - name: Install Composer dependencies
-      run: composer install --no-progress --no-suggest --prefer-dist
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist
 
-    - name: Prepare environment
-      run: |
-        cp .env.example .env
-        php artisan key:generate
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
-    - name: Run Migrations and Tests
-      env:
-        # On utilise 'localhost' car GitHub Actions exécute les steps sur l'hôte
-        # qui a accès au port mappé du service PostgreSQL (5432:5432)
-        DB_CONNECTION: pgsql
-        DB_HOST: localhost
-        DB_PORT: 5432
-        DB_DATABASE: healthtech
-        DB_USERNAME: postgres
-        DB_PASSWORD: lahcen2025
-      run: |
-        php artisan migrate --force
-        php artisan test
+      - name: Run Migrations and Tests
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: healthtech
+          DB_USERNAME: postgres
+          DB_PASSWORD: lahcen2025
+        run: |
+          php artisan migrate --force
+          php artisan test
 
-    # Job جديد باش نتيستيو واش GitHub Actions كيقدر يوصل للسيرفر
-      test-ssh-connection:
-        runs-on: ubuntu-latest
-        # هاد الـ Job غادي يتسنى حتى يساليو التستات ديال Laravel بنجاح
-        needs: laravel-tests 
-    
-        steps:
-          - name: Testing SSH Connection
-            uses: appleboy/ssh-action@v1.0.3
-            with:
-              host: 16.171.235.84
-              username: ubuntu
-              key: ${{ secrets.EC2_SSH_KEY }}
-              port: 22
-              script: |
-                echo "🚀 Connection Successful!"
-                whoami
-                uptime
-                ls -la /var/www/html
+  # Job 2: اختبار الاتصال (لاحظ أنه يبدأ من أقصى اليسار مثل الجوب الأول)
+  test-ssh-connection:
+    runs-on: ubuntu-latest
+    needs: laravel-tests 
+    steps:
+      - name: Testing SSH Connection
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 16.171.235.84
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            echo "🚀 Connection Successful!"
+            whoami
+            uptime
+            ls -la /var/www/html
