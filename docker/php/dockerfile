@@ -12,21 +12,14 @@ RUN install-php-extensions \
     ctype \
     iconv
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first
 COPY composer.json composer.lock ./
 
-# Install composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Run composer install BEFORE copying the rest of the code
-RUN composer install --no-dev --optimize-autoloader
-
-# Copy the rest of the code
 COPY . .
 
-# Expose port
 EXPOSE 9000
