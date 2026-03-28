@@ -56,8 +56,8 @@ jobs:
             fi
             cd healthtech-app
             git pull origin dev
-            docker compose down
-            docker compose up -d --build
+            docker-compose down
+            docker-compose up -d --build
             docker image prune -f
 
   # --- JOB 3: Auto Create PR (Dev to Main) ---
