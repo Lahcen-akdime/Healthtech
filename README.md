@@ -1,59 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# RareCare - HealthTech Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Une plateforme centralisée pour faciliter le suivi de patients atteints de maladies rares.
 
-## About Laravel
+## 📋 Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+RareCare est une API REST développée par une startup HealthTech pour améliorer la gestion et le suivi des patients souffrant de maladies rares. La plateforme offre une solution centralisée et efficace pour les professionnels de santé.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🏗️ Architecture
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Le projet est construit avec :
+- **Backend** : PHP avec Laravel (framework web)
+- **Templating** : Blade (moteur de templates Laravel)
 
-## Learning Laravel
+## 🚀 Fonctionnalités principales
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Gestion des dossiers patients
+- Suivi des traitements et des médicaments
+- Historique médical complet
+- Rapports et statistiques
+- API REST centralisée
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Installation
 
-## Laravel Sponsors
+### Prérequis
+- PHP 8.0+
+- Composer
+- Base de données (MySQL/PostgreSQL)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Étapes d'installation
 
-### Premium Partners
+1. **Cloner le repository**
+   ```bash
+   git clone https://github.com/Lahcen-akdime/Healthtech.git
+   cd Healthtech
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Installer les dépendances**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+3. **Configurer l'environnement**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Configurer la base de données**
+   - Mettre à jour les paramètres de connexion dans le fichier `.env`
 
-## Code of Conduct
+5. **Exécuter les migrations**
+   ```bash
+   php artisan migrate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Démarrer le serveur**
+   ```bash
+   php artisan serve
+   ```
 
-## Security Vulnerabilities
+## 🔐 Authentification
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+La plateforme utilise JWT (JSON Web Tokens) pour l'authentification de l'API.
 
-## License
+Voir l'issue [#1](https://github.com/Lahcen-akdime/Healthtech/issues/1) pour les détails de mise en place.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📚 Documentation API
+
+La documentation détaillée de l'API sera disponible à `/api/docs` une fois le serveur lancé.
+
+## 🤝 Contribution
+
+Les contributions sont bienvenues ! Veuillez :
+
+1. Fork le repository
+2. Créer une branche pour votre feature (`git checkout -b feature/AmazingFeature`)
+3. Commiter vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Pusher vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## 📝 License
+
+Ce projet est sous license [À DÉFINIR].
+
+## 📧 Contact
+
+Pour toute question ou suggestion, veuillez créer une issue dans ce repository.
+
+---
+
+**Statut du projet** : En développement 🔨
